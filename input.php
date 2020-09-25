@@ -43,7 +43,15 @@ function h ($str) {
 
 <body>
     <?php if($pageFlag === 0) : ?>
+    <!-- CSRF対策の合言葉 -->
+    <?php
+    // セッションにcsrfのトークンがなければ、ランダムな値をトークンに登録する
+    if(!isset($_SESSION['csrfToken'])){
+        $csrfToken = bin2hex(random_bytes(32));
+        $_SESSION['csrfToken'] = $csrfToken;
+    }
 
+    ?>
     <form method="POST" action="input.php">
         <label for="">名前<input type="text" name="your-name"></label><br>
         <label for="baseball"><input type="checkbox" name="sports[]" value="野球" id="baseball">野球</label><br>
@@ -53,10 +61,13 @@ function h ($str) {
         <label for="">メアド<input type="email" name="email" id=""></label><br>
 
         <input type="submit" name="btn_confirm" value="確認する">
+        <!-- CSRFをhiddenで受け渡す -->
+        <input type="hidden" name="csrf" value="<?php echo $token ?>">
     </form>
     <?php endif; ?>
 
-    <?php if($pageFlag === 1) : ?>
+    <?php if($pageFlag === 1 && $_POST['csrf'] === $_SESSION['csrfToken']) : ?>
+
     <form method="POST" action="input.php">
         名前<br>
         <?php echo h($_POST['your-name']); ?>
