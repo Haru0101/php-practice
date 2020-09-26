@@ -1,20 +1,17 @@
 <?php
-// echo '<pre>';
-// var_dump($_POST);
-// echo '</pre>';
+// CSRF 偽物のinput.php
+// 合言葉を用意して偽物を判別する
+// セッションを使う
+session_start();
+echo '<pre>';
+var_dump($_POST);
+echo '</pre>';
 // スーパーグローバル変数 php 9種類
 // 連想配列
 // クリックジャッキング対策
 header('X-Frame-Options: DENY');
 
 
-// CSRF 偽物のinput.php
-// 合言葉を用意して偽物を判別する
-// セッションを使う
-
-session_start(
-
-);
 
 $pageFlag = 0;
 
@@ -46,19 +43,40 @@ function h ($str) {
     <!-- CSRF対策の合言葉 -->
     <?php
     // セッションにcsrfのトークンがなければ、ランダムな値をトークンに登録する
+    // ソースを表示で丸見えなので、パスワードなどは使えない
     if(!isset($_SESSION['csrfToken'])){
         $csrfToken = bin2hex(random_bytes(32));
         $_SESSION['csrfToken'] = $csrfToken;
     }
+    $token = $_SESSION['csrfToken'];
 
     ?>
+    <!-- 見ての通り、ユーザーが任意で入力できるインプット欄のみ、h関数でエスケープしている -->
     <form method="POST" action="input.php">
         <label for="">名前<input type="text" name="your-name"></label><br>
-        <label for="baseball"><input type="checkbox" name="sports[]" value="野球" id="baseball">野球</label><br>
-        <label for="soccer"><input type="checkbox" name="sports[]" value="サッカー" id="soccer">サッカー</label><br>
-        <label for="basketball"><input type="checkbox" name="sports[]" value="バスケ" id="basketball">バスケ</label><br>
-
         <label for="">メアド<input type="email" name="email" id=""></label><br>
+        ホームページ
+        <input type="url" name="url" value="<?php echo h($_POST['url']); ?>">
+        <br>
+        性別
+        <label for=""><input type="radio" name="gender" value="0">男性</label>
+        <br>
+        <label for=""><input type="radio" name="gender" value="1">女性</label>
+        <br>
+        年齢
+        <select name="age" id="">
+            <option value="">選択してください</option>
+            <option value="1">20代</option>
+            <option value="2">30代</option>
+            <option value="3">40代</option>
+            <option value="4">50代</option>
+            <option value="5">60代</option>
+        </select>
+        <br>
+        お問い合わせ内容
+        <textarea name="contact" id="" cols="30" rows="10" value="<?php echo h($_POST['contact']); ?>"></textarea>
+        <br>
+        <input type="checkbox" name="caution" value="1">注意事項にチェックする
 
         <input type="submit" name="btn_confirm" value="確認する">
         <!-- CSRFをhiddenで受け渡す -->
@@ -79,10 +97,17 @@ function h ($str) {
         <input type="submit" name="btn_submit" value="送信する">
         <input type="hidden" name="your-name" value="<?php echo h($_POST['your-name']) ?>">
         <input type="hidden" name="email" value="<?php echo h($_POST['email']) ?>">
+        <input type="hidden" name="csrf" value="<?php echo h($_POST['csrf']) ?>">
     </form>
     <?php endif; ?>
     完了
-    <?php if($pageFlag === 2) : ?>
+    <!-- 完了画面でもCSRFが合っているか確認する -->
+    <?php if($pageFlag === 2 && $_POST['csrf'] === $_SESSION['csrfToken']) : ?>
+
+    送信が完了しました。
+
+    <!-- CSRFトークンは最後に削除する -->
+    <?php unset($_SESSION['csrfToken']); ?>
     <?php endif; ?>
 
 </body>
