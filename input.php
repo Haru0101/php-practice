@@ -13,6 +13,7 @@ header('X-Frame-Options: DENY');
 
 
 
+
 $pageFlag = 0;
 
 if(!empty($_POST['btn_confirm'])){
@@ -92,11 +93,29 @@ function h ($str) {
         <br>
         メールアドレス<br>
         <?php echo h($_POST['email']); ?>
+        <br>
+        ホームページ
+        <?php echo h($_POST['url']); ?>
+        <br>
+        性別
+        <?php echo h($_POST['gender']); ?>
+        <br>
+        年齢
+        <?php echo h($_POST['age']); ?>
+        <br>
+        お問い合わせ内容
+        <?php echo h($_POST['contact']); ?>
+        <br>
+
 
         <input type="submit" value="戻る" name="back">
         <input type="submit" name="btn_submit" value="送信する">
         <input type="hidden" name="your-name" value="<?php echo h($_POST['your-name']) ?>">
         <input type="hidden" name="email" value="<?php echo h($_POST['email']) ?>">
+        <input type="hidden" name="url" value="<?php echo h($_POST['url']) ?>">
+        <input type="hidden" name="gender" value="<?php echo h($_POST['gender']) ?>">
+        <input type="hidden" name="age" value="<?php echo h($_POST['age']) ?>">
+        <input type="hidden" name="contact" value="<?php echo h($_POST['contact']) ?>">
         <input type="hidden" name="csrf" value="<?php echo h($_POST['csrf']) ?>">
     </form>
     <?php endif; ?>
