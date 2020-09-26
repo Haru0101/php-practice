@@ -15,8 +15,10 @@ header('X-Frame-Options: DENY');
 
 
 $pageFlag = 0;
+$error = validation($_POST);
 
-if(!empty($_POST['btn_confirm'])){
+
+if(!empty($_POST['btn_confirm']) && empty($error)){
     $pageFlag = 1;
 }
 
@@ -50,8 +52,14 @@ function h ($str) {
         $_SESSION['csrfToken'] = $csrfToken;
     }
     $token = $_SESSION['csrfToken'];
-
     ?>
+    <?php if(!empty($_POST['btn_confirm'] && !empty($error))): ?>
+    <ul>
+        <?php foreach ($error as $value): ?>
+        <li><?php echo $value; ?></li>
+        <?php endforeach; ?>
+    </ul>
+    <?php endif; ?>
     <!-- 見ての通り、ユーザーが任意で入力できるインプット欄のみ、h関数でエスケープしている -->
     <form method="POST" action="input.php">
         <label for="">名前<input type="text" name="your-name"></label><br>
