@@ -10,11 +10,8 @@ echo '</pre>';
 // 連想配列
 // クリックジャッキング対策
 header('X-Frame-Options: DENY');
-
-
-
-
 $pageFlag = 0;
+
 $error = validation($_POST);
 
 
@@ -42,6 +39,7 @@ function h ($str) {
 </head>
 
 <body>
+
     <?php if($pageFlag === 0) : ?>
     <!-- CSRF対策の合言葉 -->
     <?php
@@ -53,6 +51,7 @@ function h ($str) {
     }
     $token = $_SESSION['csrfToken'];
     ?>
+    <!-- エラーが有る時、かつ、確認ボタンが押された状態の時に表示する（そうでないと、アクセスした時点でエラーが表示されてしまう -->
     <?php if(!empty($_POST['btn_confirm'] && !empty($error))): ?>
     <ul>
         <?php foreach ($error as $value): ?>
@@ -62,7 +61,7 @@ function h ($str) {
     <?php endif; ?>
     <!-- 見ての通り、ユーザーが任意で入力できるインプット欄のみ、h関数でエスケープしている -->
     <form method="POST" action="input.php">
-        <label for="">名前<input type="text" name="your-name"></label><br>
+        <label for="">名前<input type="text" name="your_name"></label><br>
         <label for="">メアド<input type="email" name="email" id=""></label><br>
         ホームページ
         <input type="url" name="url" value="<?php echo h($_POST['url']); ?>">
@@ -97,7 +96,7 @@ function h ($str) {
 
     <form method="POST" action="input.php">
         名前<br>
-        <?php echo h($_POST['your-name']); ?>
+        <?php echo h($_POST['your_name']); ?>
         <br>
         メールアドレス<br>
         <?php echo h($_POST['email']); ?>
@@ -118,7 +117,7 @@ function h ($str) {
 
         <input type="submit" value="戻る" name="back">
         <input type="submit" name="btn_submit" value="送信する">
-        <input type="hidden" name="your-name" value="<?php echo h($_POST['your-name']) ?>">
+        <input type="hidden" name="your_name" value="<?php echo h($_POST['your_name']) ?>">
         <input type="hidden" name="email" value="<?php echo h($_POST['email']) ?>">
         <input type="hidden" name="url" value="<?php echo h($_POST['url']) ?>">
         <input type="hidden" name="gender" value="<?php echo h($_POST['gender']) ?>">
