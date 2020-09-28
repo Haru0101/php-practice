@@ -15,6 +15,8 @@ $pageFlag = 0;
 require 'validation.php';
 $error = validation($_POST);
 
+ini_set("display_errors",1);
+error_reporting(E_ALL);
 
 if(!empty($_POST['btn_confirm']) && empty($error)){
     $pageFlag = 1;
@@ -130,6 +132,10 @@ function h ($str) {
     完了
     <!-- 完了画面でもCSRFが合っているか確認する -->
     <?php if($pageFlag === 2 && $_POST['csrf'] === $_SESSION['csrfToken']) : ?>
+
+    <?php require 'mainte/insert.php'; ?>
+    <?php insertContact($_POST);?>
+    
 
     送信が完了しました。
 
