@@ -1,5 +1,5 @@
 <?php
-const DB_HOST = 'mysql:dbname=udemy_php;host=localhost';
+const DB_HOST = 'mysql:dbname=udemy_php;host=localhost;charset=utf8';
 const DB_USER = 'php_user';
 const DB_PASSWORD = 'P@ssWord123';
 // PDOクラスのインスタンス化
