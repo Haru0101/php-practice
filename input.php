@@ -3,15 +3,16 @@
 // 合言葉を用意して偽物を判別する
 // セッションを使う
 session_start();
-echo '<pre>';
-var_dump($_POST);
-echo '</pre>';
+// echo '<pre>';
+// var_dump($_POST);
+// echo '</pre>';
 // スーパーグローバル変数 php 9種類
 // 連想配列
 // クリックジャッキング対策
 header('X-Frame-Options: DENY');
 $pageFlag = 0;
 
+require 'validation.php';
 $error = validation($_POST);
 
 
